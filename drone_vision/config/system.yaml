@@ -1,0 +1,17 @@
+model_path: "best.pt"
+confidence: 0.4
+iou_threshold: 0.5
+track_history_len: 30
+max_disappeared_frames: 15
+
+alert:
+  speed_threshold: 0.5    # m/s — trigger if object faster than this
+  z_min: 3.0              # meters — trigger if object closer than this
+  cooldown_seconds: 2.0
+
+prediction:
+  dt: 0.1                 # seconds ahead to predict next position
+
+performance:
+  fps_warning_threshold: 10
+  log_file: "logs/system.log"
