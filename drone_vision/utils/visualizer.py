@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
-from ..core.track_manager import Track
-from ..core.motion_analyzer import MotionInfo
-from ..core.alert_manager import Alert
+from drone_vision.core.track_manager import Track
+from drone_vision.core.motion_analyzer import MotionInfo
+from drone_vision.core.alert_manager import Alert
 
 _GREEN  = (0, 255, 0)
 _BLUE   = (255, 0, 0)

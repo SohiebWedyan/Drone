@@ -1,7 +1,7 @@
 import math
 from dataclasses import dataclass
 
-from .track_manager import Track
+from drone_vision.core.track_manager import Track
 
 
 @dataclass

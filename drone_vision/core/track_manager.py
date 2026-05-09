@@ -3,9 +3,9 @@ from collections import deque
 import time
 import numpy as np
 
-from .detector import Detection
-from .kalman_tracker import KalmanTracker
-from .stereo_depth import StereoDepth
+from drone_vision.core.detector import Detection
+from drone_vision.core.kalman_tracker import KalmanTracker
+from drone_vision.core.stereo_depth import StereoDepth
 
 
 @dataclass
