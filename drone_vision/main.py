@@ -1,6 +1,7 @@
 """
 Drone Vision Phase 2 — Main entry point.
 Usage: python drone_vision/main.py [--config-dir path/to/config]
+   or: python run.py
 """
 
 import argparse
@@ -10,11 +11,17 @@ import sys
 import threading
 import time
 
+# ── Allow running as a plain script (python drone_vision/main.py) ─────────────
+# Insert the project root so absolute imports resolve whether this file is
+# executed directly or imported as part of the drone_vision package.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+# ──────────────────────────────────────────────────────────────────────────────
+
 import cv2
 import yaml
-
-# Resolve paths relative to this file so the script works from any cwd
-_HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _load_yaml(path: str) -> dict:
@@ -84,16 +91,16 @@ def main(config_dir: str):
     calib_path = os.path.join(_pkg_root, cam_cfg["stereo"]["calib_path"])
     log_file = os.path.join(_HERE, "..", sys_cfg["performance"]["log_file"])
 
-    from .core.stereo_depth import StereoDepth
-    from .core.detector import Detector
-    from .core.track_manager import TrackManager
-    from .core.motion_analyzer import MotionAnalyzer
-    from .core.alert_manager import AlertManager
-    from .utils.visualizer import (
+    from drone_vision.core.stereo_depth import StereoDepth
+    from drone_vision.core.detector import Detector
+    from drone_vision.core.track_manager import TrackManager
+    from drone_vision.core.motion_analyzer import MotionAnalyzer
+    from drone_vision.core.alert_manager import AlertManager
+    from drone_vision.utils.visualizer import (
         draw_bbox, draw_trajectory, draw_prediction, draw_alerts, draw_hud
     )
-    from .utils.fps_counter import FPSCounter
-    from .utils.logger import get_logger
+    from drone_vision.utils.fps_counter import FPSCounter
+    from drone_vision.utils.logger import get_logger
 
     logger = get_logger(log_file=log_file)
     logger.info("Starting Drone Vision Phase 2")

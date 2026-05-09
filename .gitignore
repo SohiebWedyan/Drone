@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Model weights (large binary files)
+*.pt
+*.onnx
+*.tflite
+*.ncnn
+
+# Stereo calibration output (generated, not source)
+drone_vision/config/stereo_calib.npz
+
+# Captured calibration images (generated)
+drone_vision/calibration/images/*.png
+drone_vision/calibration/images/*.jpg
+
+# Logs
+drone_vision/logs/*.log
+
+# Screenshots saved during testing
+screenshot_*.png
+debug_frame_*.png
+debug_enhanced_*.png
+
+# OS
+.DS_Store
+Thumbs.db
