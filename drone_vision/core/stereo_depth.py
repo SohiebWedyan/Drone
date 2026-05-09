@@ -9,12 +9,9 @@ class StereoDepth:
     Falls back to object-height depth estimation when calibration is unavailable.
     """
 
-    # SGBM parameters tuned for 640x480 indoor/outdoor balloon tracking
-    _SGBM_MIN_DISP = 0
-    _SGBM_NUM_DISP = 96     # must be divisible by 16
-    _SGBM_BLOCK_SIZE = 7
-    _SGBM_P1 = 8 * 3 * 7 ** 2
-    _SGBM_P2 = 32 * 3 * 7 ** 2
+    # StereoBM parameters — 5x faster than SGBM, suitable for RPi 5
+    _BM_NUM_DISP  = 64   # must be divisible by 16
+    _BM_BLOCK_SIZE = 15  # must be odd
 
     def __init__(self, calib_path: str | None = None):
         self.calibrated = False
@@ -37,18 +34,9 @@ class StereoDepth:
         K_l = data["K_l"]
         self.baseline = float(abs(T[0, 0]))
         self.fx = float(K_l[0, 0])
-        self._sgbm = cv2.StereoSGBM_create(
-            minDisparity=self._SGBM_MIN_DISP,
-            numDisparities=self._SGBM_NUM_DISP,
-            blockSize=self._SGBM_BLOCK_SIZE,
-            P1=self._SGBM_P1,
-            P2=self._SGBM_P2,
-            disp12MaxDiff=1,
-            uniquenessRatio=10,
-            speckleWindowSize=100,
-            speckleRange=32,
-            preFilterCap=63,
-            mode=cv2.STEREO_SGBM_MODE_SGBM_3WAY,
+        self._bm = cv2.StereoBM_create(
+            numDisparities=self._BM_NUM_DISP,
+            blockSize=self._BM_BLOCK_SIZE,
         )
         self.calibrated = True
 
@@ -66,8 +54,7 @@ class StereoDepth:
             return None
         gray_l = cv2.cvtColor(left_rect, cv2.COLOR_BGR2GRAY)
         gray_r = cv2.cvtColor(right_rect, cv2.COLOR_BGR2GRAY)
-        disp = self._sgbm.compute(gray_l, gray_r).astype(np.float32) / 16.0
-        # Mask invalid disparities
+        disp = self._bm.compute(gray_l, gray_r).astype(np.float32) / 16.0
         disp[disp <= 0] = np.nan
         return disp
 

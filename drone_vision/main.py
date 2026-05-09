@@ -140,12 +140,16 @@ def main(config_dir: str):
                 logger.warning("No frames received for 2s — check cameras.")
                 continue
 
-            # Stereo rectify + disparity
+            # Stereo rectify (always needed for detection)
             left_rect, right_rect = depth_module.rectify(frame_l, frame_r)
-            disparity = depth_module.compute_disparity(left_rect, right_rect)
 
             # Detection on rectified left frame
             detections = detector.detect(left_rect)
+
+            # Compute disparity only when objects are present (saves CPU)
+            disparity = None
+            if detections:
+                disparity = depth_module.compute_disparity(left_rect, right_rect)
 
             # Tracking
             tracks = track_mgr.update(detections, depth_module, disparity)
@@ -158,8 +162,8 @@ def main(config_dir: str):
             for alert in alerts:
                 logger.info(alert.message)
 
-            # Visualize on left frame
-            display = left_rect.copy()
+            # Show original frame — not the rectified one — so image looks normal
+            display = frame_l.copy()
             for track in tracks:
                 motion = motions.get(track.track_id)
                 draw_trajectory(display, track.history)
