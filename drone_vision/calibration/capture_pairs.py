@@ -142,8 +142,8 @@ def main():
             display_l = cv2.resize(display_l, (dw, dh))
             display_r = cv2.resize(display_r, (dw, dh))
 
-        combined = cv2.hconcat([display_l, display_r])
-        cv2.imshow("Stereo Calibration  (SPACE=save  F=force  ESC=quit)", combined)
+        cv2.imshow("LEFT Camera  (SPACE=save  F=force  ESC=quit)", display_l)
+        cv2.imshow("RIGHT Camera (SPACE=save  F=force  ESC=quit)", display_r)
 
         key = cv2.waitKey(1) & 0xFF
 
